@@ -293,6 +293,49 @@
       line-height: 1.4; margin-top: 4px;
     }
 
+
+    /* ── human in the loop slide ── */
+    .hitl-pct {
+      font-family: 'ABCArizonaFlare', serif;
+      font-size: clamp(72px, 16vw, 140px);
+      font-weight: 300;
+      color: var(--stone-lighter);
+      line-height: 1;
+    }
+    .hitl-label {
+      font-family: 'Geist', sans-serif;
+      font-size: clamp(13px, 1.8vw, 17px);
+      color: rgba(228,228,218,0.65);
+      max-width: 420px;
+      line-height: 1.5;
+      margin-top: 12px;
+    }
+    .hitl-tagline {
+      font-family: 'Geist', sans-serif;
+      font-size: clamp(11px, 1.4vw, 13px);
+      color: rgba(228,228,218,0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 8px;
+    }
+    .hitl-chart {
+      width: 100%; max-width: 560px;
+      margin-top: 32px;
+    }
+    .bar-month {
+      font-family: 'Geist', sans-serif;
+      font-size: 9px;
+      fill: rgba(228,228,218,0.45);
+      text-anchor: middle;
+      letter-spacing: 0.06em;
+    }
+    .bar-val {
+      font-family: 'ABCArizonaFlare', serif;
+      font-size: 9px;
+      fill: rgba(228,228,218,0.55);
+      text-anchor: middle;
+    }
+
     /* ── small bets ── */
     .small-bets {
       max-width: 520px; width: 100%;
@@ -759,6 +802,35 @@
       <span class="chip">Billing anchor migration</span>
     </div>
   </div>
+</section>
+
+<!-- ══ SLIDE 7c: HUMAN IN THE LOOP ═════════════════ -->
+<section class="slide s-dark">
+  <p class="eyebrow fi" style="color:rgba(228,228,218,0.45)">How it was possible</p>
+  <p class="hitl-pct fi">71%</p>
+  <p class="hitl-label fi">of every line of code shipped to SBC came from Turbo.</p>
+  <p class="hitl-tagline fi">Human in the loop — AI speed · Human ownership</p>
+  <svg class="hitl-chart fi" viewBox="0 0 540 125" preserveAspectRatio="xMidYMid meet">
+    <rect x="7.5" y="28.7" width="52" height="71.3" rx="4" fill="rgba(228,228,218,0.25)"/>
+    <text class="bar-month" x="33.5" y="116">OCT</text>
+    <text class="bar-val" x="33.5" y="23.7">+41K</text>
+    <rect x="98.5" y="62.7" width="52" height="37.3" rx="4" fill="rgba(228,228,218,0.25)"/>
+    <text class="bar-month" x="124.5" y="116">NOV</text>
+    <text class="bar-val" x="124.5" y="57.7">+19K</text>
+    <rect x="189.5" y="35.4" width="52" height="64.6" rx="4" fill="rgba(228,228,218,0.25)"/>
+    <text class="bar-month" x="215.5" y="116">DEC</text>
+    <text class="bar-val" x="215.5" y="30.4">+36K</text>
+    <rect x="280.5" y="19.6" width="52" height="80.4" rx="4" fill="rgba(228,228,218,0.25)"/>
+    <text class="bar-month" x="306.5" y="116">JAN</text>
+    <text class="bar-val" x="306.5" y="14.6">+45K</text>
+    <rect x="371.5" y="46.2" width="52" height="53.8" rx="4" fill="rgba(228,228,218,0.25)"/>
+    <text class="bar-month" x="397.5" y="116">FEB</text>
+    <text class="bar-val" x="397.5" y="41.2">+28K</text>
+    <rect x="462.5" y="20.0" width="52" height="80.0" rx="4" fill="var(--orange)"/>
+    <text class="bar-month" x="488.5" y="116">MAR</text>
+    <text class="bar-val" x="488.5" y="15.0" style="fill:var(--orange)">+82K</text>
+  </svg>
+  <p style="font-family:'Geist',sans-serif;font-size:10px;color:rgba(228,228,218,0.3);margin-top:4px;letter-spacing:0.06em">Lines of code shipped · Oct 2025 – Mar 2026</p>
 </section>
 
 <!-- ══ SLIDE 8: MEETINGS ════════════════════════════ -->
