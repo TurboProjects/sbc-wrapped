@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seoul Beauty Club × Turbo — Wrapped</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'ABCArizonaFlare';
+      src: url('assets/fonts/ABCArizonaFlare-Light.woff2') format('woff2');
+      font-weight: 300;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'ABCArizonaFlare';
+      src: url('assets/fonts/ABCArizonaFlare-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Decimal';
+      src: url('assets/fonts/Decimal-Medium.woff2') format('woff2');
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* SBC palette — from tailwind.config.js */
+      --algae:        #5D5A49;
+      --dark-olive:   #3D3B2F;
+      --stone-light:  #DADAD0;
+      --stone-lighter:#E4E4DA;
+      --stone-card:   #EAE9DC;
+      --brown-dark:   #442D27;
+      --brown-light:  #58413B;
+      --deemph:       #6A6A6A;
+      --orange:       #EE5E2A;
+      --orange-dark:  #AE4C0F;
+      --gray-200:     #f5f5f6;
+      --white:        #ffffff;
+    }
+
+    html { overflow-y: scroll; }
+    /* CSS snap only on touch devices — JS handles desktop wheel */
+    @media (hover: none) and (pointer: coarse) {
+      html { scroll-snap-type: y mandatory; }
+      .slide { scroll-snap-align: start; }
+    }
+    body {
+      font-family: 'Geist', 'Helvetica Neue', sans-serif;
+      background: var(--dark-olive);
+      color: var(--brown-dark);
+    }
+
+    .slide {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 72px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── slide backgrounds ── */
+    .s-algae  { background: var(--algae); color: var(--stone-lighter); }
+    .s-dark   { background: var(--dark-olive); color: var(--stone-lighter); }
+    .s-stone  { background: var(--stone-light); color: var(--brown-dark); }
+    .s-card   { background: var(--stone-card); color: var(--brown-dark); }
+    .s-lighter{ background: var(--stone-lighter); color: var(--brown-dark); }
+
+    /* ── dot line decoration ── */
+    .dot-line {
+      display: block;
+      width: 80px;
+      height: 8px;
+      background-image: radial-gradient(circle, var(--dark-olive) 3px, transparent 3px);
+      background-size: 16px 8px;
+      background-repeat: repeat-x;
+      opacity: 0.45;
+      margin: 28px auto;
+    }
+    .s-algae .dot-line, .s-dark .dot-line {
+      background-image: radial-gradient(circle, var(--stone-lighter) 3px, transparent 3px);
+    }
+
+    /* ── type ── */
+    .eyebrow {
+      font-family: 'Decimal', 'Helvetica Neue', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--deemph);
+      margin-bottom: 28px;
+    }
+    .s-algae .eyebrow { color: rgba(228, 228, 218, 0.55); }
+    .s-dark  .eyebrow { color: rgba(228, 228, 218, 0.55); }
+
+    .mega {
+      font-family: 'ABCArizonaFlare', serif;
+      font-size: clamp(80px, 18vw, 180px);
+      font-weight: 300;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      color: var(--brown-dark);
+    }
+    .s-algae .mega { color: var(--stone-lighter); }
+    .s-dark  .mega { color: var(--stone-lighter); }
+
+    .mega-label {
+      font-family: 'Geist', sans-serif;
+      font-size: clamp(13px, 2vw, 17px);
+      font-weight: 300;
+      color: var(--deemph);
+      margin-top: 20px;
+      letter-spacing: 0.06em;
+    }
+    .s-algae .mega-label { color: rgba(228, 228, 218, 0.6); }
+    .s-dark  .mega-label { color: rgba(228, 228, 218, 0.6); }
+
+    .h1 {
+      font-family: 'ABCArizonaFlare', serif;
+      font-size: clamp(34px, 7vw, 68px);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--brown-dark);
+    }
+    .s-algae .h1 { color: var(--stone-lighter); }
+    .s-dark  .h1  { color: var(--stone-lighter); }
+
+    .body {
+      font-family: 'Geist', sans-serif;
+      font-size: clamp(13px, 1.7vw, 16px);
+      line-height: 1.7;
+      color: var(--deemph);
+      max-width: 480px;
+      margin-top: 20px;
+    }
+    .s-algae .body { color: rgba(228, 228, 218, 0.6); }
+    .s-dark  .body  { color: rgba(228, 228, 218, 0.6); }
+
+    .divider {
+      width: 32px; height: 1px;
+      background: rgba(100,90,80,0.2);
+      margin: 28px auto;
+    }
+    .s-algae .divider { background: rgba(228,228,218,0.2); }
+    .s-dark  .divider  { background: rgba(228,228,218,0.2); }
+
+    /* ── accent colors ── */
+    .accent  { color: var(--orange-dark); }
+    .accent2 { color: var(--orange); }
+    .accent3 { color: var(--brown-light); }
+
+    /* ── scroll hint ── */
+    .hint {
+      position: absolute; bottom: 28px; left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Decimal', sans-serif;
+      font-size: 9px; letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(228,228,218,0.35);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:.15} 50%{opacity:.5} }
+
+    /* ── fade in ── */
+    .fi {
+      opacity: 0; transform: translateY(16px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .fi.vis { opacity: 1; transform: none; }
+
+    /* ── slide 1 intro animations ── */
+    .s1-eyebrow { animation: up .9s .1s both; }
+    .s1-h1      { animation: up .9s .35s both; }
+    .s1-sub     { animation: up .9s .6s both; }
+    .s1-div     { animation: up .9s .8s both; }
+    .s1-mark    { animation: up .9s 1s both; }
+    @keyframes up { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
+
+    /* ── stat row ── */
+    .stats {
+      display: flex; gap: 48px; flex-wrap: wrap;
+      justify-content: center; margin-top: 44px;
+    }
+    .stat { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .stat-n {
+      font-family: 'ABCArizonaFlare', serif;
+      font-size: clamp(40px, 8vw, 72px);
+      font-weight: 300; line-height: 1;
+    }
+    .stat-l {
+      font-family: 'Decimal', sans-serif;
+      font-size: 10px; color: var(--deemph);
+      text-transform: uppercase; letter-spacing: 0.18em;
+    }
+
+    /* ── growth row ── */
+    .growth-row {
+      display: flex; align-items: center;
+      gap: 24px; margin-top: 20px; flex-wrap: wrap;
+      justify-content: center;
+    }
+    .growth-n {
+      font-family: 'ABCArizonaFlare', serif;
+      font-size: clamp(52px, 11vw, 108px);
+      font-weight: 300; line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .growth-arrow { font-size: 22px; color: var(--deemph); }
+    .growth-label {
+      font-family: 'Decimal', sans-serif;
+      font-size: 10px; color: var(--deemph);
+      text-transform: uppercase; letter-spacing: 0.14em;
+      margin-top: 6px; text-align: center;
+    }
+
+    /* ── narrative cards ── */
+    .chaos-card {
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(228,228,218,0.12);
+      border-radius: 16px;
+      padding: 28px 32px;
+      max-width: 500px; width: 100%;
+      margin-top: 36px; text-align: left;
+    }
+    .chaos-item {
+      display: flex; align-items: flex-start;
+      gap: 14px; padding: 10px 0;
+      border-bottom: 1px solid rgba(228,228,218,0.1);
+    }
+    .chaos-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .chaos-label {
+      font-family: 'Decimal', sans-serif;
+      font-size: 9px; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(228,228,218,0.35);
+      min-width: 28px; padding-top: 2px; flex-shrink: 0;
+    }
+    .chaos-text {
+      font-family: 'Geist', sans-serif;
+      font-size: 13px; line-height: 1.5;
+      color: rgba(228,228,218,0.75);
+    }
+    .chaos-text strong {
+      color: var(--stone-lighter);
+      font-weight: 500;
+    }
+
+    /* ── built grid ── */
+    .built-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 36px;
+      max-width: 520px; width: 100%;
+    }
+    .built-item {
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(100,90,80,0.15);
+      border-radius: 12px;
+      padding: 14px 16px;
+      text-align: left;
+    }
+    .built-title {
+      font-family: 'ABCArizonaFlare', serif;
+      font-size: 15px; font-weight: 300;
+      color: var(--brown-dark); line-height: 1.3;
+    }
+    .built-desc {
+      font-family: 'Geist', sans-serif;
+      font-size: 11px; color: var(--deemph);
+      line-height: 1.4; margin-top: 4px;
+    }
+
+    /* ── small bets ── */
+    .small-bets {
+      max-width: 520px; width: 100%;
+      margin-top: 20px;
+    }
+    .small-bets-label {
+      font-family: 'Geist', sans-serif;
+      font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--deemph); margin-bottom: 10px;
+    }
+    .small-bets-chips {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .chip {
+      font-family: 'Geist', sans-serif;
+      font-size: 11px; color: var(--brown-dark);
+      background: rgba(255,255,255,0.45);
+      border: 1px solid rgba(100,90,80,0.15);
+      border-radius: 20px;
+      padding: 4px 10px;
+      white-space: nowrap;
+    }
+
+    /* ── now list ── */
+    .now-list {
+      display: flex; flex-direction: column;
+      gap: 0; max-width: 480px; width: 100%;
+      margin-top: 36px;
+    }
+    .now-item {
+      display: flex; align-items: center;
+      gap: 16px; padding: 14px 0;
+      border-bottom: 1px solid rgba(100,90,80,0.12);
+      text-align: left;
+    }
+    .now-item:last-child { border-bottom: none; }
+    .now-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--orange-dark); flex-shrink: 0;
+    }
+    .now-text {
+      font-family: 'Geist', sans-serif;
+      font-size: clamp(13px, 1.7vw, 15px);
+      color: var(--brown-dark); line-height: 1.4;
+    }
+    .now-text span {
+      font-family: 'Decimal', sans-serif;
+      font-size: 9px; text-transform: uppercase;
+      letter-spacing: 0.18em; color: var(--deemph);
+      margin-left: 8px; vertical-align: middle;
+    }
+
+    /* ── people ── */
+    .people {
+      display: flex; flex-wrap: wrap;
+      gap: 24px 32px; justify-content: center;
+      margin-top: 44px; max-width: 600px;
+    }
+    .person {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px;
+    }
+    .avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--stone-light);
+      border: 1.5px solid rgba(100,90,80,0.2);
+      overflow: hidden;
+    }
+    .avatar img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .p-name {
+      font-family: 'Geist', sans-serif;
+      font-size: 11px; font-weight: 500;
+      color: var(--brown-dark); letter-spacing: 0.02em;
+    }
+    .p-role {
+      font-family: 'Decimal', sans-serif;
+      font-size: 10px; color: var(--deemph);
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+
+    /* ── team mosaic ── */
+    .team-mosaic {
+      display: grid;
+      grid-template-columns: repeat(6, 52px);
+      gap: 8px; margin-top: 32px;
+      justify-content: center;
+    }
+    .team-mosaic img {
+      width: 52px; height: 52px;
+      border-radius: 50%; object-fit: cover;
+      border: 1.5px solid rgba(100,90,80,0.2);
+    }
+
+    /* ── surfaces ── */
+    .surfaces-section {
+      display: flex; flex-direction: column;
+      gap: 24px; margin-top: 40px;
+      max-width: 520px; width: 100%; text-align: left;
+    }
+    .surfaces-group { display: flex; flex-direction: column; gap: 10px; }
+    .surfaces-group-label {
+      font-family: 'Decimal', sans-serif;
+      font-size: 9px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 0.22em;
+      color: var(--deemph); margin-bottom: 2px;
+    }
+    .surfaces-chips {
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .surface {
+      padding: 8px 16px;
+      border: 1px solid rgba(100,90,80,0.25);
+      border-radius: 100px;
+      font-family: 'Geist', sans-serif;
+      font-size: 12px; font-weight: 400;
+      color: var(--deemph);
+      background: rgba(255,255,255,0.4);
+    }
+    .surface.new {
+      border-color: var(--orange-dark);
+      color: var(--orange-dark);
+      background: rgba(174,76,15,0.06);
+    }
+
+    /* ── shelf ── */
+    .shelf-row {
+      display: flex; align-items: center;
+      gap: 24px; margin-top: 20px;
+      justify-content: center;
+    }
+    .shelf-zero {
+      font-family: 'ABCArizonaFlare', serif;
+      font-size: clamp(52px, 11vw, 108px);
+      font-weight: 300; line-height: 1;
+      color: rgba(228,228,218,0.35);
+    }
+    .shelf-32 {
+      font-family: 'ABCArizonaFlare', serif;
+      font-size: clamp(52px, 11vw, 108px);
+      font-weight: 300; line-height: 1;
+      color: var(--stone-lighter);
+    }
+    .shelf-img {
+      width: 100%; max-width: 520px;
+      border-radius: 10px; margin-top: 24px;
+      opacity: 0.9; display: block;
+    }
+
+    /* ── closing ── */
+    .closing {
+      font-family: 'ABCArizonaFlare', serif;
+      font-style: normal;
+      font-size: clamp(28px, 6vw, 60px);
+      font-weight: 300;
+      line-height: 1.35; color: var(--stone-lighter);
+    }
+    .closing-sub {
+      font-family: 'Decimal', sans-serif;
+      font-size: 10px; letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(228,228,218,0.45);
+      margin-top: 36px;
+    }
+
+    .mark {
+      font-family: 'Decimal', sans-serif;
+      font-size: 10px; letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(228,228,218,0.45);
+    }
+
+    /* ── built card category tag ── */
+    .built-cat {
+      font-family: 'Decimal', sans-serif;
+      font-size: 7px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 0.18em;
+      color: var(--dark-olive); opacity: 0.45;
+      margin-bottom: 4px;
+    }
+
+    /* ── counter ── */
+    .cu { display: inline-block; }
+  </style>
+</head>
+<body>
+
+<!-- ══ SLIDE 1: INTRO ══════════════════════════════ -->
+<section class="slide s-dark">
+  <p class="eyebrow s1-eyebrow">September 2025 — April 2026</p>
+  <h1 class="h1 s1-h1" style="font-size: clamp(40px, 9vw, 88px)">
+    Seoul Beauty<br/>Club × Turbo
+  </h1>
+  <p class="mega-label s1-sub" style="margin-top:24px">A look back at what we built together.</p>
+  <span class="dot-line s1-div"></span>
+  <p class="mark s1-mark">Turbo · 2026</p>
+  <p class="hint">scroll ↓</p>
+</section>
+
+<!-- ══ SLIDE 2: LINES OF CODE ══════════════════════ -->
+<section class="slide s-stone">
+  <p class="eyebrow fi">Lines written for you</p>
+  <p class="mega fi accent">
+    <span class="cu" data-target="168173">0</span>
+  </p>
+  <p class="mega-label fi">lines of code.</p>
+  <span class="dot-line fi"></span>
+  <div class="stats fi">
+    <div class="stat">
+      <span class="stat-n accent cu" data-target="250">0</span>
+      <span class="stat-l">Commits</span>
+    </div>
+    <div class="stat">
+      <span class="stat-n accent cu" data-target="136">0</span>
+      <span class="stat-l">PRs merged</span>
+    </div>
+    <div class="stat">
+      <span class="stat-n accent cu" data-target="7">0</span>
+      <span class="stat-l">Months</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SLIDE 3: SUBSCRIBER GROWTH ══════════════════ -->
+<section class="slide s-lighter">
+  <p class="eyebrow fi">Subscriber growth</p>
+  <h2 class="h1 fi">While we built,<br/><span class="accent">you grew.</span></h2>
+  <div class="fi" style="width:100%;max-width:520px;margin:28px auto 0;position:relative;">
+    <svg viewBox="0 -48 520 228" preserveAspectRatio="xMidYMid meet" style="width:100%;overflow:visible">
+      <defs>
+        <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="var(--deemph)" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="var(--orange-dark)"/>
+        </linearGradient>
+        <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--orange-dark)" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="var(--orange-dark)" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <!-- area fill -->
+      <path d="M 20,155 C 80,148 160,140 220,118 C 280,96 340,60 500,18 L 500,170 L 20,170 Z"
+            fill="url(#fillGrad)"/>
+      <!-- line -->
+      <path d="M 20,155 C 80,148 160,140 220,118 C 280,96 340,60 500,18"
+            fill="none" stroke="url(#lineGrad)" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- start dot -->
+      <circle cx="20" cy="155" r="4" fill="var(--deemph)"/>
+      <!-- end dot -->
+      <circle cx="500" cy="18" r="5" fill="var(--orange-dark)"/>
+      <!-- start label -->
+      <text x="20" y="173" font-family="'Decimal',sans-serif" font-size="9" fill="var(--deemph)" text-anchor="middle" letter-spacing="0.12em" text-transform="uppercase">OCT 2025</text>
+      <!-- end label -->
+      <text x="500" y="-30" font-family="'Decimal',sans-serif" font-size="9" fill="var(--orange-dark)" text-anchor="middle" letter-spacing="0.12em">TODAY</text>
+      <!-- start number -->
+      <text x="20" y="145" font-family="'ABCArizonaFlare',serif" font-size="22" fill="var(--deemph)" text-anchor="middle">2,100</text>
+      <!-- end number -->
+      <text x="500" y="-8" font-family="'ABCArizonaFlare',serif" font-size="28" fill="var(--orange-dark)" text-anchor="middle">9,671</text>
+    </svg>
+  </div>
+  <p class="body fi" style="margin-top:20px">
+    4.6× growth. Every feature we shipped helped get them there.
+  </p>
+</section>
+
+<!-- ══ SLIDE 4: SCALE ══════════════════════════════ -->
+<section class="slide s-card">
+  <p class="eyebrow fi">Your product, at scale</p>
+  <p class="mega fi" style="color:var(--brown-dark)">
+    <span class="cu" data-target="3757897">0</span>
+  </p>
+  <p class="mega-label fi">pageviews.</p>
+  <p class="body fi" style="margin-top:24px">
+    618,073 real people. All of them touching something we built together.
+  </p>
+</section>
+
+<!-- ══ SLIDE 5: IMPACT NUMBERS ═════════════════════ -->
+<section class="slide s-stone">
+  <p class="eyebrow fi">Impact by the numbers</p>
+  <h2 class="h1 fi">Real actions,<br/><span class="accent">real people.</span></h2>
+  <div class="stats fi" style="margin-top:48px">
+    <div class="stat">
+      <span class="stat-n accent cu" data-target="23301">0</span>
+      <span class="stat-l">Orders placed</span>
+    </div>
+    <div class="stat">
+      <span class="stat-n accent cu" data-target="109846">0</span>
+      <span class="stat-l">Surveys completed</span>
+    </div>
+    <div class="stat">
+      <span class="stat-n accent cu" data-target="92292">0</span>
+      <span class="stat-l">Accounts created</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SLIDE 6: THE SHELF ══════════════════════════ -->
+<section class="slide s-algae">
+  <p class="eyebrow fi">Not just your shelf grew</p>
+  <h2 class="h1 fi">Cami's skincare<br/>shelf grew too.</h2>
+  <div class="shelf-row fi">
+    <div>
+      <div class="shelf-zero">0</div>
+      <div class="growth-label" style="color:rgba(228,228,218,0.4)">SKUs. Day one.</div>
+    </div>
+    <div class="growth-arrow" style="color:rgba(228,228,218,0.3)">→</div>
+    <div>
+      <div class="shelf-32 cu" data-target="32">0</div>
+      <div class="growth-label" style="color:rgba(228,228,218,0.55)">SKUs. Today.</div>
+    </div>
+  </div>
+  <img src="assets/shelf.jpg" alt="The shelf" class="shelf-img fi" />
+  <p class="body fi" style="margin-top:16px; font-style: italic;">
+    Side effects may include: 32 new SKUs and skin that's never been this smooth.
+  </p>
+</section>
+
+<!-- ══ SLIDE 7a: HOW WE FOUND YOU ══════════════════ -->
+<section class="slide s-algae">
+  <p class="eyebrow fi">October 2025 — where it started</p>
+  <h2 class="h1 fi">A product with<br/>real traction.</h2>
+  <div class="chaos-card fi">
+    <div class="chaos-item">
+      <span class="chaos-label">Team</span>
+      <span class="chaos-text">Allan and Leo <strong>shipped v1 themselves</strong> — incredible speed, real subscribers from day one.</span>
+    </div>
+    <div class="chaos-item">
+      <span class="chaos-label">Scale</span>
+      <span class="chaos-text"><strong>2,000 subscribers</strong> running on payment links, manual workarounds, and a lot of determination.</span>
+    </div>
+    <div class="chaos-item">
+      <span class="chaos-label">Infra</span>
+      <span class="chaos-text"><strong>No dev environment.</strong> Code pushed straight to production. No QA process. No release cycle.</span>
+    </div>
+    <div class="chaos-item">
+      <span class="chaos-label">Data</span>
+      <span class="chaos-text"><strong>No metrics.</strong> No visibility into what was working, what was broken, or who was churning.</span>
+    </div>
+    <div class="chaos-item">
+      <span class="chaos-label">Money</span>
+      <span class="chaos-text"><strong>No payment tracking</strong> — no way to know who had paid and what was owed.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SLIDE 7b: WHAT WE BUILT ═════════════════════ -->
+<section class="slide s-lighter">
+  <p class="eyebrow fi">What we did about it</p>
+  <h2 class="h1 fi">Six months.<br/><span class="accent">More than 19 big bets.</span></h2>
+  <div class="built-grid fi">
+    <div class="built-item">
+      <div class="built-cat">Foundation</div>
+      <div class="built-title">Testing infrastructure</div>
+      <div class="built-desc">Dev environment, QA process, release cycles. The base everything else was built on.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Commerce</div>
+      <div class="built-title">Payment migration</div>
+      <div class="built-desc">Full system rebuild. Full order and payment visibility. No more free orders.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Operations</div>
+      <div class="built-title">AcrossB Warehouse</div>
+      <div class="built-desc">Full fulfillment migration. Real-time tracking went from 24 hours to seconds.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Foundation</div>
+      <div class="built-title">Klaviyo integration</div>
+      <div class="built-desc">CRM pipeline, subscription events, retention flows — wired end-to-end from day one.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Foundation</div>
+      <div class="built-title">PostHog analytics</div>
+      <div class="built-desc">For the first time, real visibility into what was happening — bugs surfaced, funnels measured, every decision backed by data.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Commerce</div>
+      <div class="built-title">Express Checkout</div>
+      <div class="built-desc">Apple Pay, card, one flow — subscriptions started converting.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Commerce</div>
+      <div class="built-title">Gift card system</div>
+      <div class="built-desc">A new acquisition channel — ready right in time for the holidays.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Operations</div>
+      <div class="built-title">Default boxes</div>
+      <div class="built-desc">Month-end work that used to keep Liam up all night. Now runs automatically, at scale.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Experience</div>
+      <div class="built-title">New landing page</div>
+      <div class="built-desc">Rebuilt from scratch to match the brand you've become.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Growth</div>
+      <div class="built-title">Survey redesign</div>
+      <div class="built-desc">Three versions. AI-powered skin insights. Conversion up from 54% to 67%.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Growth</div>
+      <div class="built-title">A/B test infrastructure</div>
+      <div class="built-desc">Pricing experiments, no-discount test — real conversion data running.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Experience</div>
+      <div class="built-title">Product detail pages</div>
+      <div class="built-desc">Public, SEO-friendly catalog. Every product with a page of its own.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Experience</div>
+      <div class="built-title">Cancellation + Skip redesign</div>
+      <div class="built-desc">Cleaner flows, no stuck loops, better retention data.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Operations</div>
+      <div class="built-title">Admin panel overhaul</div>
+      <div class="built-desc">Default orders, bulk upload, faster performance. Liam used to stay up all night for this.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Foundation</div>
+      <div class="built-title">Auth refactoring</div>
+      <div class="built-desc">Google login, magic link, account deduplication — clean, consistent, no more edge cases.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Experience</div>
+      <div class="built-title">Account UI redesign</div>
+      <div class="built-desc">Matched the visual language of the landing page and survey. Consistency builds trust.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Intelligence</div>
+      <div class="built-title">AI Picking</div>
+      <div class="built-desc">Personalized box curation powered by AI. From zero to live.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Intelligence</div>
+      <div class="built-title">AI Routines</div>
+      <div class="built-desc">Your full routine across every box you've ever received — organized, AM/PM.</div>
+    </div>
+    <div class="built-item">
+      <div class="built-cat">Intelligence</div>
+      <div class="built-title">AI Chat (Ask Claire)</div>
+      <div class="built-desc">Claude-powered advisor aware of your routine, survey, and product history.</div>
+    </div>
+  </div>
+  <div class="small-bets fi">
+    <div class="small-bets-label">And dozens more</div>
+    <div class="small-bets-chips">
+      <span class="chip">Referral code system</span>
+      <span class="chip">TikTok &amp; Criteo events</span>
+      <span class="chip">Stripe decline analysis</span>
+      <span class="chip">UK payment links</span>
+      <span class="chip">DB performance indexes</span>
+      <span class="chip">Vercel preview envs</span>
+      <span class="chip">Feature flags</span>
+      <span class="chip">Maintenance mode</span>
+      <span class="chip">Mobile Safari fixes</span>
+      <span class="chip">Bulk WMS upload</span>
+      <span class="chip">Order export &amp; reports</span>
+      <span class="chip">Skin story speed</span>
+      <span class="chip">Static IP for AcrossB</span>
+      <span class="chip">Billing anchor migration</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SLIDE 8: MEETINGS ════════════════════════════ -->
+<section class="slide s-card">
+  <p class="eyebrow fi">Time spent together</p>
+  <p class="mega fi" style="color:var(--brown-dark)">
+    <span class="cu" data-target="1980">0</span>
+  </p>
+  <p class="mega-label fi">minutes on calls.</p>
+  <p class="body fi" style="margin-top:24px">
+    33 meetings. Every single week, for 6 months.<br/>
+    Planning calls, working sessions, weekly standups.<br/>
+    Not one missed.
+  </p>
+</section>
+
+<!-- ══ SLIDE 9: THE PEOPLE ══════════════════════════ -->
+<section class="slide s-stone">
+  <p class="eyebrow fi">From the Turbo team</p>
+  <h2 class="h1 fi">Thank you,<br/><span class="accent">Seoul Beauty Club.</span></h2>
+  <p class="body fi">None of this would have happened without a team that trusted us, showed up every week, and cared deeply about getting it right.</p>
+  <div class="team-mosaic fi" style="margin-top:40px; grid-template-columns: repeat(6, 56px); gap: 10px;">
+    <img src="assets/people/team_1.jpg" alt="team" style="width:56px;height:56px;" />
+    <img src="assets/people/team_2.jpg" alt="team" style="width:56px;height:56px;" />
+    <img src="assets/people/team_3.jpg" alt="team" style="width:56px;height:56px;" />
+    <img src="assets/people/team_4.jpg" alt="team" style="width:56px;height:56px;" />
+    <img src="assets/people/team_5.jpg" alt="team" style="width:56px;height:56px;" />
+    <img src="assets/people/team_6.jpg" alt="team" style="width:56px;height:56px;" />
+    <img src="assets/people/team_7.jpg" alt="team" style="width:56px;height:56px;" />
+    <img src="assets/people/team_8.jpg" alt="team" style="width:56px;height:56px;" />
+    <img src="assets/people/team_9.jpg" alt="team" style="width:56px;height:56px;" />
+    <img src="assets/people/team_10.jpg" alt="team" style="width:56px;height:56px;" />
+    <img src="assets/people/team_11.jpg" alt="team" style="width:56px;height:56px;" />
+    <img src="assets/people/team_12.jpg" alt="team" style="width:56px;height:56px;" />
+  </div>
+</section>
+
+<!-- ══ SLIDE 11: CLOSE ══════════════════════════════ -->
+<section class="slide s-dark">
+  <p class="eyebrow fi">September 2025 — April 2026</p>
+  <p class="closing fi">
+    Thanks for coming<br/>along for the ride.
+  </p>
+  <span class="dot-line fi"></span>
+  <p class="closing-sub fi">Turbo · Seoul Beauty Club</p>
+</section>
+
+<script>
+  // Desktop: one-slide-at-a-time wheel scroll
+  // Lock releases only when scroll reaches the target — not on a fixed timer
+  (function() {
+    let locked = false;
+    let pollTimer = null;
+    let hardTimer = null;
+    const slides = Array.from(document.querySelectorAll('.slide'));
+
+    function getNearest() {
+      let idx = 0, minDist = Infinity;
+      slides.forEach((s, i) => {
+        const d = Math.abs(s.getBoundingClientRect().top);
+        if (d < minDist) { minDist = d; idx = i; }
+      });
+      return idx;
+    }
+
+    function unlock() {
+      locked = false;
+      clearInterval(pollTimer);
+      clearTimeout(hardTimer);
+      pollTimer = hardTimer = null;
+    }
+
+    function goTo(slide) {
+      locked = true;
+      slide.scrollIntoView({ behavior: 'smooth' });
+      const targetY = slide.offsetTop;
+      // Poll until scroll reaches target, then release
+      pollTimer = setInterval(() => {
+        if (Math.abs(window.scrollY - targetY) < 4) unlock();
+      }, 80);
+      // Hard fallback after 2s
+      hardTimer = setTimeout(unlock, 2000);
+    }
+
+    window.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      if (locked) return;
+      const dir = e.deltaY > 0 ? 1 : -1;
+      const current = getNearest();
+      const target = Math.max(0, Math.min(slides.length - 1, current + dir));
+      if (target !== current) goTo(slides[target]);
+    }, { passive: false });
+  })();
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('vis');
+      e.target.querySelectorAll('.cu[data-target]').forEach(animCount);
+      io.unobserve(e.target);
+    });
+  }, { threshold: 0.25 });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+
+  const sio = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.querySelectorAll('.cu[data-target]:not([data-done])').forEach(el => {
+        el.dataset.done = 1;
+        animCount(el);
+      });
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('.slide').forEach(el => sio.observe(el));
+
+  function animCount(el) {
+    const target = +el.dataset.target;
+    if (!target) return;
+    const dur = target > 10000 ? 2000 : target > 100 ? 1400 : 900;
+    const start = performance.now();
+    function step(now) {
+      const p = Math.min((now - start) / dur, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.floor(ease * target).toLocaleString();
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = target.toLocaleString();
+    }
+    requestAnimationFrame(step);
+  }
+</script>
+</body>
+</html>
