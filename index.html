@@ -562,11 +562,11 @@
 <section class="slide s-card">
   <p class="eyebrow fi">Your product, at scale</p>
   <p class="mega fi" style="color:var(--brown-dark)">
-    <span class="cu" data-target="3757897">0</span>
+    <span class="cu" data-target="3865532" data-rate="0.397">0</span>
   </p>
   <p class="mega-label fi">pageviews.</p>
   <p class="body fi" style="margin-top:24px">
-    618,073 real people. All of them touching something we built together.
+    <span class="cu" data-target="495470" data-rate="0.073">0</span> real people. All of them touching something we built together.
   </p>
 </section>
 
@@ -576,15 +576,15 @@
   <h2 class="h1 fi">Real actions,<br/><span class="accent">real people.</span></h2>
   <div class="stats fi" style="margin-top:48px">
     <div class="stat">
-      <span class="stat-n accent cu" data-target="23301">0</span>
+      <span class="stat-n accent cu" data-target="23653" data-rate="0.0036">0</span>
       <span class="stat-l">Orders placed</span>
     </div>
     <div class="stat">
-      <span class="stat-n accent cu" data-target="109846">0</span>
+      <span class="stat-n accent cu" data-target="110977" data-rate="0.01">0</span>
       <span class="stat-l">Surveys completed</span>
     </div>
     <div class="stat">
-      <span class="stat-n accent cu" data-target="92292">0</span>
+      <span class="stat-n accent cu" data-target="93253" data-rate="0.01">0</span>
       <span class="stat-l">Accounts created</span>
     </div>
   </div>
@@ -808,12 +808,15 @@
 
 <script>
   // Desktop: one-slide-at-a-time wheel scroll
-  // Lock releases only when scroll reaches the target — not on a fixed timer
   (function() {
-    let locked = false;
-    let pollTimer = null;
-    let hardTimer = null;
+    // Only run on non-touch devices
+    if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
+
     const slides = Array.from(document.querySelectorAll('.slide'));
+    let current = 0;
+    let animating = false;
+    let wheelDebounce = null;
+    let accDelta = 0;
 
     function getNearest() {
       let idx = 0, minDist = Infinity;
@@ -824,32 +827,30 @@
       return idx;
     }
 
-    function unlock() {
-      locked = false;
-      clearInterval(pollTimer);
-      clearTimeout(hardTimer);
-      pollTimer = hardTimer = null;
-    }
-
-    function goTo(slide) {
-      locked = true;
-      slide.scrollIntoView({ behavior: 'smooth' });
-      const targetY = slide.offsetTop;
-      // Poll until scroll reaches target, then release
-      pollTimer = setInterval(() => {
-        if (Math.abs(window.scrollY - targetY) < 4) unlock();
-      }, 80);
-      // Hard fallback after 2s
-      hardTimer = setTimeout(unlock, 2000);
+    function goTo(idx) {
+      if (animating) return;
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      if (idx === current) return;
+      animating = true;
+      current = idx;
+      accDelta = 0;
+      slides[idx].scrollIntoView({ behavior: 'smooth' });
+      // Wait for scroll to land, then hold 400ms to absorb momentum
+      setTimeout(() => { animating = false; }, 900);
     }
 
     window.addEventListener('wheel', function(e) {
       e.preventDefault();
-      if (locked) return;
-      const dir = e.deltaY > 0 ? 1 : -1;
-      const current = getNearest();
-      const target = Math.max(0, Math.min(slides.length - 1, current + dir));
-      if (target !== current) goTo(slides[target]);
+      if (animating) return;
+      accDelta += e.deltaY;
+      clearTimeout(wheelDebounce);
+      wheelDebounce = setTimeout(() => {
+        if (Math.abs(accDelta) < 30) { accDelta = 0; return; }
+        const dir = accDelta > 0 ? 1 : -1;
+        current = getNearest();
+        goTo(current + dir);
+        accDelta = 0;
+      }, 50);
     }, { passive: false });
   })();
 
@@ -883,10 +884,27 @@
       const p = Math.min((now - start) / dur, 1);
       const ease = 1 - Math.pow(1 - p, 3);
       el.textContent = Math.floor(ease * target).toLocaleString();
-      if (p < 1) requestAnimationFrame(step);
-      else el.textContent = target.toLocaleString();
+      if (p < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = target.toLocaleString();
+        // Start live ticking if data-rate is set (increments per second)
+        const rate = parseFloat(el.dataset.rate);
+        if (rate) startLiveTick(el, target, rate);
+      }
     }
     requestAnimationFrame(step);
+  }
+
+  function startLiveTick(el, base, rate) {
+    // rate = increments per second; update every 200ms
+    const interval = 200;
+    const perTick = rate * interval / 1000;
+    let val = base;
+    setInterval(() => {
+      val += perTick;
+      el.textContent = Math.floor(val).toLocaleString();
+    }, interval);
   }
 </script>
 </body>
