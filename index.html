@@ -836,7 +836,7 @@
       accDelta = 0;
       slides[idx].scrollIntoView({ behavior: 'smooth' });
       // Wait for scroll to land, then hold 400ms to absorb momentum
-      setTimeout(() => { animating = false; }, 900);
+      setTimeout(() => { animating = false; }, 500);
     }
 
     window.addEventListener('wheel', function(e) {
